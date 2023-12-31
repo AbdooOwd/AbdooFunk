@@ -325,9 +325,12 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
-	public var overBg: FlxSprite;
+	var overBg: FlxSprite;
 	var overOver:FlxSprite;
 	public var needChars: Array<Bool> = [true, true, true]; // dad - gf - bf
+
+	public var stageSet: Bool = false;
+	public var stageGroup: FlxSpriteGroup;
 
 	override public function create()
 	{
@@ -497,72 +500,10 @@ class PlayState extends MusicBeatState
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
-		switch (curStage)
-		{
-			case 'stage': //Week 1
-				var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
-				add(bg);
+		stageGroup = new FlxSpriteGroup();
 
-				var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
-				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-				stageFront.updateHitbox();
-				add(stageFront);
-				if(!ClientPrefs.lowQuality) {
-					var stageLight:BGSprite = new BGSprite('stage_light', -125, -100, 0.9, 0.9);
-					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
-					stageLight.updateHitbox();
-					add(stageLight);
-					var stageLight:BGSprite = new BGSprite('stage_light', 1225, -100, 0.9, 0.9);
-					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
-					stageLight.updateHitbox();
-					stageLight.flipX = true;
-					add(stageLight);
-
-					var stageCurtains:BGSprite = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
-					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-					stageCurtains.updateHitbox();
-					add(stageCurtains);
-				}
-				dadbattleSmokes = new FlxSpriteGroup(); //troll'd
-
-			case 'philly': //Week 3
-				if(!ClientPrefs.lowQuality) {
-					var bg:BGSprite = new BGSprite('philly/sky', -100, 0, 0.1, 0.1);
-					add(bg);
-				}
-
-				var city:BGSprite = new BGSprite('philly/city', -10, 0, 0.3, 0.3);
-				city.setGraphicSize(Std.int(city.width * 0.85));
-				city.updateHitbox();
-				add(city);
-
-				phillyLightsColors = [0xFF31A2FD, 0xFF31FD8C, 0xFFFB33F5, 0xFFFD4531, 0xFFFBA633];
-				phillyWindow = new BGSprite('philly/window', city.x, city.y, 0.3, 0.3);
-				phillyWindow.setGraphicSize(Std.int(phillyWindow.width * 0.85));
-				phillyWindow.updateHitbox();
-				add(phillyWindow);
-				phillyWindow.alpha = 0;
-
-				if(!ClientPrefs.lowQuality) {
-					var streetBehind:BGSprite = new BGSprite('philly/behindTrain', -40, 50);
-					add(streetBehind);
-				}
-
-				phillyTrain = new BGSprite('philly/train', 2000, 360);
-				add(phillyTrain);
-
-				trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
-				FlxG.sound.list.add(trainSound);
-
-				phillyStreet = new BGSprite('philly/street', -40, 50);
-				add(phillyStreet);
-			
-			case 'blank-dbg':
-				var whiteBg: FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5);
-				needChars = [false, false, true];
-				whiteBg.makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.WHITE);
-				add(whiteBg);
-		}
+		updateStage(curStage); // Summarized into a function to use it in the 'Change Stage' event
+		add(stageGroup); // all of the curStage's sprites are here
 
 		overBg = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5);
 		overBg.visible = false;
@@ -1059,6 +1000,89 @@ class PlayState extends MusicBeatState
 		Paths.clearUnusedMemory();
 		
 		CustomFadeTransition.nextCamera = camOther;
+	}
+
+	function updateStage(leStage: String = 'stage') {
+		if (stageSet == true) {
+			for (i in stageGroup.members) {
+				i.destroy();
+			}
+			needChars = [true, true, true]; // 'blank-dbg' f**ks the chars up if i dont do that
+			remove(stageGroup);
+			stageSet = false;
+		}
+
+		switch (leStage) // It took me 20mins to realize I didn't change this from 'curStage' to 'leStage'
+		{
+			case 'stage': //Week 1
+				var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
+				stageGroup.add(bg);
+
+				var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 1, 1);
+				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+				stageFront.updateHitbox();
+				stageGroup.add(stageFront);
+				if(!ClientPrefs.lowQuality) {
+					var stageLight:BGSprite = new BGSprite('stage_light', -125, -100, 0.9, 0.9);
+					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
+					stageLight.updateHitbox();
+					stageGroup.add(stageLight);
+					var stageLight:BGSprite = new BGSprite('stage_light', 1225, -100, 0.9, 0.9);
+					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
+					stageLight.updateHitbox();
+					stageLight.flipX = true;
+					stageGroup.add(stageLight);
+
+					var stageCurtains:BGSprite = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
+					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
+					stageCurtains.updateHitbox();
+					stageGroup.add(stageCurtains);
+				}
+				dadbattleSmokes = new FlxSpriteGroup(); //troll'd
+
+			case 'philly': //Week 3
+				if(!ClientPrefs.lowQuality) {
+					var bg:BGSprite = new BGSprite('philly/sky', -100, 0, 0.1, 0.1);
+					stageGroup.add(bg);
+				}
+
+				var city:BGSprite = new BGSprite('philly/city', -10, 0, 0.3, 0.3);
+				city.setGraphicSize(Std.int(city.width * 0.85));
+				city.updateHitbox();
+				stageGroup.add(city);
+
+				phillyLightsColors = [0xFF31A2FD, 0xFF31FD8C, 0xFFFB33F5, 0xFFFD4531, 0xFFFBA633];
+				phillyWindow = new BGSprite('philly/window', city.x, city.y, 0.3, 0.3);
+				phillyWindow.setGraphicSize(Std.int(phillyWindow.width * 0.85));
+				phillyWindow.updateHitbox();
+				stageGroup.add(phillyWindow);
+				phillyWindow.alpha = 0;
+
+				if(!ClientPrefs.lowQuality) {
+					var streetBehind:BGSprite = new BGSprite('philly/behindTrain', -40, 50);
+					add(streetBehind);
+				}
+
+				phillyTrain = new BGSprite('philly/train', 2000, 360);
+				stageGroup.add(phillyTrain);
+
+				trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
+				FlxG.sound.list.add(trainSound);
+
+				phillyStreet = new BGSprite('philly/street', -40, 50);
+				stageGroup.add(phillyStreet);
+			
+			case 'blank-dbg':
+				var whiteBg: FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5);
+				needChars = [false, false, true];
+				whiteBg.makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.WHITE);
+				stageGroup.add(whiteBg);
+		}
+
+		if (stageSet == false)
+			add(stageGroup);
+
+		stageSet = true;
 	}
 
 	#if (!flash && sys)
@@ -2805,6 +2829,8 @@ class PlayState extends MusicBeatState
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
 		switch(eventName) {
 
+			case 'Change Stage':
+				updateStage(value1);
 			case 'Blackout':
 				var isSwitch: Bool = false;
 				var val1: Null<Float> = Std.parseFloat(value1); // Tween Duration (might remove it)

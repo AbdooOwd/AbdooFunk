@@ -6,10 +6,12 @@ I will put here how I fixed some code problems
  based on the players of the week, so I realized that the character's name are (most of the time)
  the same as their icon names. So I used that to do the thing, but for now idk how to split 
  the icon image in to 2
+
 - To show the two icons, I first coded the thing in (duh), but it took like 10 lines of code.
 I recreated the thing in a for loop (thx `i`), it's now like 4 lines (if u remove the *"beautifying"*
 indentation and syntax i used). It is in `StoryMenuState.hx` (at the time I'm writing) around
 line 194.
+
 - Nvm, `HealthIcon.hx` can split the icon's sprite
 
 ## Blackout Event
@@ -33,3 +35,10 @@ Python just goes through every single line, we're compiling here...!
 
 - I'm always adding and removing `overOver`, why not add it at the very beginning
 of any song, but knowing myself; It's not ***"optimizy"***.
+
+## Change Stage Event
+- I put that `switch` thing which sets the stage's sprites based on `curStage` inside 
+a function `updateStage` so I can use that in the event.
+
+- Took me 20 minutes to realize that I forgot to use `leStage` which is the argument of
+the `updateStage` function instead of `curStage`. It's working now.
