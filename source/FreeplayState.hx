@@ -1,5 +1,6 @@
 package;
 
+import flixel.tweens.FlxEase;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -232,7 +233,7 @@ class FreeplayState extends MusicBeatState
 		sprite.loadGraphic(Paths.image('funPic/$newFunFile', 'shared'));
 		sprite.screenCenter(Y);
 		// Fade in (directly)
-		FlxTween.tween(sprite, { alpha: 1, x:  funPicX }, fadeSpeed);
+		FlxTween.tween(sprite, { alpha: 1, x:  funPicX }, fadeSpeed, { ease: FlxEase.circOut });
 		
 	}
 	
