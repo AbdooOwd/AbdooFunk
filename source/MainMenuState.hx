@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 #if desktop
 import Discord.DiscordClient;
@@ -27,7 +28,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.6.3'; //This is also used for Discord RPC
-	public static var abdooVersion_num:String = '0.2.3';
+	public static var abdooVersion_num:String = '0.3.0';
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -284,6 +285,10 @@ class MainMenuState extends MusicBeatState
 							{
 								var daChoice:String = optionShit[curSelected];
 
+								new FlxTimer().start(0.1, function(tmr){
+									FlxTween.tween(spr, { y: FlxG.height + spr.height}, 0.36, { ease: FlxEase.circIn });
+								});
+
 								switch (daChoice)
 								{
 									case 'story_mode':
@@ -294,8 +299,10 @@ class MainMenuState extends MusicBeatState
 									case 'mods':
 										MusicBeatState.switchState(new ModsMenuState());
 									#end
+									#if ACHIEVEMENTS_ALLOWED
 									case 'awards':
 										MusicBeatState.switchState(new AchievementsMenuState());
+									#end
 									case 'credits':
 										MusicBeatState.switchState(new CreditsState());
 									case 'options':

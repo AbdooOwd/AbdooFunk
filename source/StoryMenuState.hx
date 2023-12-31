@@ -181,10 +181,10 @@ class StoryMenuState extends MusicBeatState
 
 	private function updateIcons(leWeekData: WeekData, ?addThem: Bool = false):Void {
 
-		// Clear the existing icons from the group
 		for (icon in playersIco) remove(icon);
+		//TESTIT: Smooth removing + appearing
 		
-		playersIco = []; // Clear the array
+		playersIco = [];
 	
 		// To be extra clear: 0 is bf, 1 is the enemy (in those arrays I use)
 		var leIcons:Array<String> = [leWeekData.weekCharacters[1], leWeekData.weekCharacters[0]]; // 2 is gf
