@@ -2810,6 +2810,9 @@ class PlayState extends MusicBeatState
 				var val1: Null<Float> = Std.parseFloat(value1); // Tween Duration (might remove it)
 				var val2: Null<Float> = 0.0;
 				var val2str: String = "";
+
+				var valueEase = { };
+				Reflect.setProperty(valueEase, "ease", FlxEase.circInOut);
 				
 				/*
 				   	Here's the wacky part:
@@ -2846,26 +2849,26 @@ class PlayState extends MusicBeatState
 					overBg.visible = true;
 					overOver.visible = true;
 
-					FlxTween.tween(overBg, {alpha: 1}, val1, { ease: FlxEase.cubeInOut });
-					FlxTween.tween(overOver, {alpha: 0.5}, val1, { ease: FlxEase.cubeInOut });
+					FlxTween.tween(overBg, {alpha: 1}, val1, valueEase);
+					FlxTween.tween(overOver, {alpha: 0.5}, val1, valueEase);
 				}
 
 				if (isSwitch == false) {
 
 					new FlxTimer().start(val2 + val1, function(tmr: FlxTimer) {
-						FlxTween.tween(overBg, {alpha: 0}, val1, { ease: FlxEase.cubeInOut });
-						FlxTween.tween(overOver, {alpha: 0}, val1, { ease: FlxEase.cubeInOut, onComplete: function(twn:FlxTween) {
+						FlxTween.tween(overBg, {alpha: 0}, val1, valueEase);
+						FlxTween.tween(overOver, {alpha: 0}, val1, { ease: FlxEase.circInOut, onComplete: function(twn:FlxTween) {
 							overBg.visible = false;
 							overOver.visible = false;
 						}});
 					});
 				}
 				else if (isSwitch == true && val2str == "off") {
-					FlxTween.tween(overBg, {alpha: 0}, val1, { ease: FlxEase.cubeInOut });
-					FlxTween.tween(overOver, {alpha: 0}, val1, { ease: FlxEase.cubeInOut, onComplete: function(twn:FlxTween) {
+					FlxTween.tween(overBg, {alpha: 0}, val1, valueEase);
+					FlxTween.tween(overOver, {alpha: 0}, val1, { ease: FlxEase.circInOut, onComplete: function(twn:FlxTween) {
 						overBg.visible = false;
 						overOver.visible = false;
-					}});
+					}}); // TODO: Test Ease Storing to not always change by each (more efficient)
 				}
 				
 
