@@ -1,0 +1,20 @@
+{
+	"songs": [
+		["jump-out", "gloopy", [165, 0, 77]]
+	],
+
+	"weekCharacters": [
+		"gloopy",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "stage",
+
+	"storyName": "BOP",
+	"weekBefore": "tutorial",
+	"weekName": "BOP",
+	"startUnlocked": true,
+
+	"hideStoryMode": true,
+	"hideFreeplay": false
+}
