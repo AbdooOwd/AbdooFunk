@@ -1,5 +1,6 @@
 package;
 
+import flixel.group.FlxSpriteGroup;
 #if desktop
 import Discord.DiscordClient;
 import sys.thread.Thread;
@@ -90,6 +91,8 @@ class TitleState extends MusicBeatState
 	public static var updateVersion:String = '';
 
 	private var tooSus: Bool = true;
+	public var logoGroup: FlxSpriteGroup;
+	var withAbdoo: FlxSprite;
 
 	override public function create():Void
 	{
@@ -335,11 +338,23 @@ class TitleState extends MusicBeatState
 		}
 		gfDance.antialiasing = ClientPrefs.globalAntialiasing;
 
-		//add(gfDance);
+		if (tooSus == false) add(gfDance);
 		gfDance.shader = swagShader.shader;
 		logoBl.screenCenter(X);
 		logoBl.y = 0;
-		add(logoBl);
+		
+		withAbdoo = new FlxSprite(0, 370);
+		withAbdoo.loadGraphic(Paths.image('withAbdoo', 'preload'));
+		withAbdoo.screenCenter(X);
+
+		logoGroup = new FlxSpriteGroup();
+		logoGroup.x = 0;
+		logoGroup.y = 0;
+
+		logoGroup.add(logoBl);
+		logoGroup.add(withAbdoo);
+		add(logoGroup);
+
 		logoBl.shader = swagShader.shader;
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
@@ -384,12 +399,7 @@ class TitleState extends MusicBeatState
 		// titleText.screenCenter(X);
 		add(titleText);
 
-		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
-		logo.screenCenter();
-		logo.antialiasing = ClientPrefs.globalAntialiasing;
-		// add(logo);
-
-		FlxTween.tween(logoBl, {y: logoBl.y + 25}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
+		FlxTween.tween(logoGroup, {y: logoGroup.y + 25}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
 		//FlxTween.tween(logo, {y: logoBl.y + 25}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
 
 		credGroup = new FlxGroup();
@@ -630,8 +640,11 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if(logoBl != null)
+		if(logoBl != null) {
 			logoBl.animation.play('bump', true);
+			bump(withAbdoo.scale, "x", 1.2, 1, 0.345);
+			bump(withAbdoo.scale, "y", 1.2, 1, 0.345);
+		}
 
 		if(gfDance != null) {
 			danceLeft = !danceLeft;
