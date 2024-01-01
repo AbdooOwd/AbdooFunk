@@ -44,7 +44,7 @@
 	<classpath name="source" />
 	
 	<!-- PSYCH ENGINE CUSTOMIZATION -->
-	<define name="MODS_ALLOWED" value="false" if="ur_mom" />
+	<define name="MODS_ALLOWED" if="desktop" />
 	<define name="LUA_ALLOWED" if="desktop" />
 	<define name="ACHIEVEMENTS_ALLOWED" value="false" />
 	<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
@@ -83,10 +83,10 @@
 	<assets path="assets/shared"        library="shared"        exclude="*.ogg" if="web"/>
 	<assets path="assets/shared"        library="shared"        exclude="*.mp3" unless="web"/>
 	
-	<section if="MODS_ALLOWED">
+	<!-- <section if="MODS_ALLOWED">
 		<assets path='example_mods' rename='mods' embed='false'/>
-	</section>
-	<assets path='art/readme.txt' rename='do NOT readme.txt' />
+	</section> -->
+	<!-- <assets path='art/readme.txt' rename='do NOT readme.txt' /> -->
 	<assets path='abdoo/Funny Coding.md' rename='assets/abdoo coding.txt' />
 	<assets path='abdoo/changelog.md' rename='assets/changelog.txt' />
 	<!-- <template path='mods' /> -->
