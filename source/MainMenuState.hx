@@ -28,7 +28,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.6.3'; //This is also used for Discord RPC
-	public static var abdooVersion_num:String = '0.3.0';
+	public static var abdooVersion_num:String = '0.2.0';
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -45,7 +45,6 @@ class MainMenuState extends MusicBeatState
 		'options'
 	];
 
-	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
@@ -79,7 +78,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		//var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite(-80).makeGraphic(FlxG.width, FlxG.height, FlxColor.GREEN);
 		//bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -92,17 +91,13 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-		//magenta.scrollFactor.set(0, yScroll);
-		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
-		magenta.updateHitbox();
-		magenta.screenCenter();
-		magenta.visible = false;
-		magenta.antialiasing = ClientPrefs.globalAntialiasing;
-		magenta.color = 0xFFfd719b;
-		add(magenta);
+		var colorStrip: String = "#0e380f" ;
+		var stripY: Int = 140;
+		var stripU = new FlxSprite(0, FlxG.height - stripY).makeGraphic(FlxG.width, stripY, FlxColor.fromString(colorStrip));
+		add(stripU);
+		var stripD = new FlxSprite(0, 0).makeGraphic(FlxG.width, stripY, FlxColor.fromString(colorStrip));
+		add(stripD);
 		
-		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
@@ -121,26 +116,25 @@ class MainMenuState extends MusicBeatState
 			var lePathMenu: String = 'mainmenu/pretty/' + optionShit[i] + '_pretty';
 			menuItem.loadGraphic(Paths.image(lePathMenu, 'preload'));
 			menuItem.ID = i;
-			menuItem.alpha = 0.6;
+			menuItem.alpha = 0.4;
 
 			//Customization Things
 			menuItem.x = 100;
 
-			//Right Items
 			switch (i)
 			{
-				case 0:
-					menuItem.x = 80;
-					menuItem.y -= 45;
-				case 1:
+				case 0: // story
+					menuItem.x = 60;
+					menuItem.y = 30; // -45
+				case 1: // freeplay
 					menuItem.x = 800;
-					menuItem.y -= 200;
-				case 2:
-					menuItem.x = 80;
-					menuItem.y += 215;
-				case 3:
-					menuItem.x = 750;
-					menuItem.y += 65;
+					menuItem.y = 30; // -200
+				case 2: // credits
+					menuItem.x = 60;
+					menuItem.y = FlxG.height - menuItem.height - 50;
+				case 3: // options
+					menuItem.x = 800;
+					menuItem.y = FlxG.height - menuItem.height - 50;
 			}
 
 			//menuItem.screenCenter(X);
@@ -258,7 +252,6 @@ class MainMenuState extends MusicBeatState
 					selectedSomethin = true;
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 
-					if(ClientPrefs.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 
 					menuItems.forEach(function(spr:FlxSprite)
@@ -286,7 +279,7 @@ class MainMenuState extends MusicBeatState
 								var daChoice:String = optionShit[curSelected];
 
 								new FlxTimer().start(0.1, function(tmr){
-									FlxTween.tween(spr, { y: FlxG.height + spr.height}, 0.36, { ease: FlxEase.circIn });
+									FlxTween.tween(spr, { y: FlxG.height + spr.height}, 0.3, { ease: FlxEase.circIn });
 								});
 
 								switch (daChoice)
@@ -358,7 +351,7 @@ class MainMenuState extends MusicBeatState
 				//camFollow.setPosition(spr.getGraphicMidpoint().x, spr.getGraphicMidpoint().y - add);
 				spr.centerOffsets();
 			} else {
-				spr.alpha = 0.6;
+				spr.alpha = 0.4;
 			}
 		});
 	}
