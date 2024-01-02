@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxTimer;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -19,6 +20,8 @@ import sys.io.File;
 #end
 import lime.utils.Assets;
 
+import abdoo.UsefulStuff.bump;
+
 using StringTools;
 
 class CreditsState extends MusicBeatState
@@ -36,6 +39,8 @@ class CreditsState extends MusicBeatState
 	var descBox:AttachedSprite;
 
 	var offsetThing:Float = -75;
+
+	var again: Bool = true;
 
 	override function create()
 	{
@@ -82,7 +87,7 @@ class CreditsState extends MusicBeatState
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Abdoo Funk Mod'],
-			['AbdooOwd',			'abdooowd',			'AbdooFunk Mod Owner (Programmer)',										'https://twitter.com/AbdooOwd',			'488133'],
+			['AbdooOwd',			'abdooowd',			'AbdooFunk Mod Owner (Programmer)',								'https://twitter.com/AbdooOwd',			'488133'],
 			[''],
 			['Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
@@ -166,6 +171,7 @@ class CreditsState extends MusicBeatState
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
+
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.7)
@@ -238,7 +244,31 @@ class CreditsState extends MusicBeatState
 				}
 			}
 		}
+
+		// The cool haha Abdoo Bumpin' camera when selected cuz im cool
+		// TODO: Optimize dis
+		/*while(creditsStuff[curSelected][1] == 'abdooowd' && again == true) {
+			again = false;
+			new FlxTimer().start(0.82, function(tmr){
+				if (creditsStuff[curSelected][1] == 'abdooowd') // recheck so it doesnt bump for smn else
+					bump(FlxG.camera, 'zoom', 1.2, 1, 0.4);
+				again = true;
+			});
+		}*/
+
 		super.update(elapsed);
+		
+		if (FlxG.camera.zoom != 1)
+			// goes back to original cam zoom (which is 1)
+			FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1));
+	
+		if (creditsStuff[curSelected][1] == 'abdooowd' && again) {
+			again = false; // instantly block the program from "coming back here"
+			FlxG.camera.zoom += 0.03;
+			new FlxTimer().start(0.85, function(tmr){
+				again = true;
+			});
+		}
 	}
 
 	var moveTween:FlxTween = null;
