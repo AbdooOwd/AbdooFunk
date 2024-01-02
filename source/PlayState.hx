@@ -949,7 +949,7 @@ class PlayState extends MusicBeatState
 			}
 			seenCutscene = true;
 		}
-		else if (!isStoryMode && !seenCutscene) { // cutscenes that play even from freeplay
+		else if (!seenCutscene) { // cutscenes that play even from freeplay
 			switch (daSong)
 			{
 				case 'jump-out':
