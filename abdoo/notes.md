@@ -6,3 +6,4 @@
     - I'm using
 - `weekThing` is the week's sprite in `StoryMenuState.hx`
 - I love `FlxGroup`s
+- Use `CutsceneHandler` if I wanna make an in-game cutscene
