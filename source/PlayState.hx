@@ -332,6 +332,8 @@ class PlayState extends MusicBeatState
 	public var stageSet: Bool = false;
 	public var stageGroup: FlxSpriteGroup;
 
+	var daSong:String;
+
 	override public function create()
 	{
 		//trace('Playback Rate: ' + playbackRate);
@@ -416,6 +418,7 @@ class PlayState extends MusicBeatState
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
+		
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -937,12 +940,20 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-
-		var daSong:String = Paths.formatToSongPath(curSong);
-		if (isStoryMode && !seenCutscene)
+		if (isStoryMode && !seenCutscene) // cutscenes that play only in storymode
 		{
 			switch (daSong)
 			{
+				default:
+					startCountdown();
+			}
+			seenCutscene = true;
+		}
+		else if (!isStoryMode && !seenCutscene) { // cutscenes that play even from freeplay
+			switch (daSong)
+			{
+				case 'jump-out':
+					glopCutsceneNEW();
 				default:
 					startCountdown();
 			}
@@ -1077,12 +1088,71 @@ class PlayState extends MusicBeatState
 				needChars = [false, false, true];
 				whiteBg.makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.WHITE);
 				stageGroup.add(whiteBg);
+			case 'glop': // for 'jump-out'
+				needChars = [true, false, true];
+				defaultCamZoom = 0.77;
+				FlxG.camera.zoom = defaultCamZoom;
+				
+				var sky:BGSprite = new BGSprite('externMod/hahaGlop/happy_sky', -640, -700, 0.75, 0.75);
+				var back:BGSprite = new BGSprite('externMod/hahaGlop/happy_back', -640, -600, 0.9, 0.9);
+				var front:BGSprite = new BGSprite('externMod/hahaGlop/happy_front', -590, -300, 1, 1);
+
+				var scale:Float = 0.8;
+				front.setGraphicSize(Std.int(front.width * scale));
+				back.setGraphicSize(Std.int(back.width * scale));
+				sky.setGraphicSize(Std.int(sky.width * scale));
+
+				stageGroup.add(sky);
+				stageGroup.add(back);
+				stageGroup.add(front);
 		}
 
 		if (stageSet == false)
 			add(stageGroup);
 
 		stageSet = true;
+	}
+
+	function glopCutsceneNEW() {
+		var cutsceneHandler: CutsceneHandler = new CutsceneHandler();
+
+		cutsceneHandler.onStart = function() {
+			camHUD.visible = false;
+			FlxG.camera.zoom = 0.87;
+			defaultCamZoom = 0.87;
+			camFollow.set(boyfriend.x - 165, boyfriend.y - 50);
+		};
+
+		cutsceneHandler.finishCallback = function() {
+			// just copying tankman's cutscene code :skull:
+			camHUD.visible = true;
+			FlxG.camera.shake(0, 0, null, true);
+
+			moveCamera(true);
+			fadeInArrows = false;
+			startCountdown();
+		};
+
+		cutsceneHandler.endTime = 6.5;
+
+		cutsceneHandler.timer(1, function() {
+			camFollow.set(boyfriend.x - 60, boyfriend.y + 20);
+		});
+
+		cutsceneHandler.timer(2, function(){
+			boyfriend.playAnim('hey', true);
+		});
+
+		cutsceneHandler.timer(4, function(){
+			camFollow.set(dad.x + 450, boyfriend.y + 20);
+		});
+
+		cutsceneHandler.timer(6, function(){
+			FlxG.camera.shake();
+			FlxTween.tween(FlxG.camera, { zoom: 1.4 }, 0.52, { ease: FlxEase.quadInOut, onComplete: function(twn) {
+				FlxG.camera.zoom = 0.77;
+			} });
+		});
 	}
 
 	#if (!flash && sys)
@@ -1336,7 +1406,7 @@ class PlayState extends MusicBeatState
 	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
 	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void
 	{
-		// TO DO: Make this more flexible, maybe?
+		// TODO: Make this more flexible, maybe?
 		if(psychDialogue != null) return;
 
 		if(dialogueFile.dialogue.length > 0) {
@@ -1484,6 +1554,8 @@ class PlayState extends MusicBeatState
 		Paths.sound('introGo' + introSoundsSuffix);
 	}
 
+	var fadeInArrows: Bool = true;
+
 	public function startCountdown():Void
 	{
 		if(startedCountdown) {
@@ -1498,6 +1570,7 @@ class PlayState extends MusicBeatState
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
+
 			for (i in 0...playerStrums.length) {
 				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
 				setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
@@ -1823,6 +1896,7 @@ class PlayState extends MusicBeatState
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song;
+		daSong = Paths.formatToSongPath(curSong);
 
 		if (SONG.needsVoices)
 			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
@@ -2091,6 +2165,7 @@ class PlayState extends MusicBeatState
 		{
 			// FlxG.log.add(i);
 			var targetAlpha:Float = 1;
+
 			if (player < 1)
 			{
 				if(!ClientPrefs.opponentStrums) targetAlpha = 0;
@@ -2099,7 +2174,7 @@ class PlayState extends MusicBeatState
 
 			var babyArrow:StrumNote = new StrumNote(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
 			babyArrow.downScroll = ClientPrefs.downScroll;
-			if (!isStoryMode && !skipArrowStartTween)
+			if (!isStoryMode && !skipArrowStartTween && fadeInArrows)
 			{
 				//babyArrow.y -= 10;
 				babyArrow.alpha = 0;
@@ -2273,6 +2348,8 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		if (FlxG.keys.justPressed.H) cpuControlled = !cpuControlled;
+
 		/*if (FlxG.keys.justPressed.NINE)
 		{
 			iconP1.swapOldIcon();
@@ -2829,8 +2906,12 @@ class PlayState extends MusicBeatState
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
 		switch(eventName) {
 
+			case '':
+				var x: Int;
+
 			case 'Change Stage':
 				updateStage(value1);
+			
 			case 'Blackout':
 				var isSwitch: Bool = false;
 				var val1: Null<Float> = Std.parseFloat(value1); // Tween Duration (might remove it)
