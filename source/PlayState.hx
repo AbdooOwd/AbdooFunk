@@ -1014,6 +1014,9 @@ class PlayState extends MusicBeatState
 	}
 
 	function updateStage(leStage: String = 'stage') {
+
+        var stageAntiAlias:Bool = ClientPrefs.globalAntialiasing;
+
 		if (stageSet == true) {
 			for (i in stageGroup.members) {
 				i.destroy();
@@ -1089,9 +1092,6 @@ class PlayState extends MusicBeatState
 				whiteBg.makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.WHITE);
 				stageGroup.add(whiteBg);
 			case 'glop': // for 'jump-out'
-				needChars = [true, false, true];
-				defaultCamZoom = 0.77;
-				FlxG.camera.zoom = defaultCamZoom;
 				
 				var sky:BGSprite = new BGSprite('externMod/hahaGlop/happy_sky', -640, -700, 0.75, 0.75);
 				var back:BGSprite = new BGSprite('externMod/hahaGlop/happy_back', -640, -600, 0.9, 0.9);
@@ -1105,11 +1105,26 @@ class PlayState extends MusicBeatState
 				stageGroup.add(sky);
 				stageGroup.add(back);
 				stageGroup.add(front);
+            case 'dz': // dekious
+                var bg: BGSprite = new BGSprite('dz/buildinings', -200, -250, 0, 0); // TODO: MAKE SCROLL
+                var road: BGSprite = new BGSprite('dz/road', 200, 520, 1, 1);
+
+                //var scale: Float = 1.65;
+                bg.setGraphicSize(Std.int(bg.width * 1.9));
+                road.setGraphicSize(Std.int(road.width * 2.2)); // TODO: MAKE LESS BLURRY
+                road.scale.y *= 1.2;
+
+                stageGroup.add(bg);
+                stageGroup.add(road);
 		}
 
 		if (stageSet == false)
 			add(stageGroup);
 
+        stageGroup.forEach(function(stageObj) {
+            stageObj.antialiasing = stageAntiAlias;
+        });
+    
 		stageSet = true;
 	}
 
@@ -1120,7 +1135,6 @@ class PlayState extends MusicBeatState
 			camHUD.visible = false;
 			FlxG.camera.zoom = 0.87;
 			defaultCamZoom = 0.87;
-			camFollow.set(boyfriend.x - 165, boyfriend.y - 50);
 		};
 
 		cutsceneHandler.finishCallback = function() {
