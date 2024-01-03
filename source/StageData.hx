@@ -27,7 +27,7 @@ typedef StageFile = {
 	var camera_girlfriend:Array<Float>;
 	var camera_speed:Null<Float>;
 }
-
+// TODO: Start using this cuz being a dum'ass I deleted all of the stages .json (:
 class StageData {
 	public static var forceNextDirectory:String = null;
 	public static function loadDirectory(SONG:SwagSong) {
@@ -41,18 +41,6 @@ class StageData {
 					stage = 'spooky';
 				case 'pico' | 'blammed' | 'philly' | 'philly-nice':
 					stage = 'philly';
-				case 'milf' | 'satin-panties' | 'high':
-					stage = 'limo';
-				case 'cocoa' | 'eggnog':
-					stage = 'mall';
-				case 'winter-horrorland':
-					stage = 'mallEvil';
-				case 'senpai' | 'roses':
-					stage = 'school';
-				case 'thorns':
-					stage = 'schoolEvil';
-				case 'ugh' | 'guns' | 'stress':
-					stage = 'tank';
 				default:
 					stage = 'stage';
 			}
