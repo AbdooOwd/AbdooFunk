@@ -27,7 +27,7 @@ typedef StageFile = {
 	var camera_girlfriend:Array<Float>;
 	var camera_speed:Null<Float>;
 }
-// TODO: Start using this cuz being a dum'ass I deleted all of the stages .json (:
+
 class StageData {
 	public static var forceNextDirectory:String = null;
 	public static function loadDirectory(SONG:SwagSong) {

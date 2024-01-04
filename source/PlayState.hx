@@ -953,7 +953,9 @@ class PlayState extends MusicBeatState
 			switch (daSong)
 			{
 				case 'jump-out':
-					glopCutsceneNEW();
+					glopCutscene();
+				case 'les-algeriens':
+					dzCutscene();
 				default:
 					startCountdown();
 			}
@@ -1128,7 +1130,44 @@ class PlayState extends MusicBeatState
 		stageSet = true;
 	}
 
-	function glopCutsceneNEW() {
+	function dzCutscene() {
+		var cutsceneHandler: CutsceneHandler = new CutsceneHandler();
+
+		cutsceneHandler.onStart = function() {
+			camHUD.visible = false;
+		};
+
+		cutsceneHandler.finishCallback = function() {
+			moveCamera(true);
+			startCountdown();
+			new FlxTimer().start(2, function(tmr){
+				camHUD.alpha = 0;
+				camHUD.visible = true;
+				FlxTween.tween(camHUD, { alpha: 1 }, 6, { ease: FlxEase.quadInOut});
+			});
+		};
+
+		cutsceneHandler.endTime = 8;
+
+		cutsceneHandler.timer(1.3, function() {
+			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y);
+			//camFollow.set(boyfriend.x - 60, boyfriend.y + 100); // bf gotta be 'Abdoo'!!!
+		});
+
+		cutsceneHandler.timer(2.5, function() {
+			boyfriend.playAnim('singLEFT', true); // TODO: Animate some BF Custom Animations (for adobe Animate)
+		});
+
+		cutsceneHandler.timer(4, function(){
+			camFollow.set(dad.x + 450, boyfriend.getMidpoint().y);
+		});
+
+		cutsceneHandler.timer(5, function(){
+			dad.playAnim('checkWut', true);
+		});
+	}
+
+	function glopCutscene() {
 		var cutsceneHandler: CutsceneHandler = new CutsceneHandler();
 
 		cutsceneHandler.onStart = function() {
