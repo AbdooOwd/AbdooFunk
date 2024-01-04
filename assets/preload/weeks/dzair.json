@@ -1,0 +1,20 @@
+{
+	"songs": [
+		["les algeriens", "dekious", [165, 0, 77]]
+	],
+
+	"weekCharacters": [
+		"dekious",
+		"abdoo",
+		"gf"
+	],
+	"weekBackground": "stage",
+
+	"storyName": "Dzair",
+	"weekBefore": "tutorial",
+	"weekName": "Dzair",
+	"startUnlocked": true,
+
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}
