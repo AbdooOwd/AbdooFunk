@@ -5,3 +5,5 @@ pico
 bf-pixel
 gf-pixel
 pico-player
+dekious
+gloppy
