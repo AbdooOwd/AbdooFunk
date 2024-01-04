@@ -23,12 +23,14 @@ import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
 
+import abdoo.UsefulStuff.getModVersion;
+
 using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.6.3'; //This is also used for Discord RPC
-	public static var abdooVersion_num:String = '0.2.0';
+	public static var abdooVersion_num:String;
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -150,6 +152,8 @@ class MainMenuState extends MusicBeatState
 		//FlxG.camera.follow(camFollowPos, null, 1);
 
 		var allInfoString: String = "FNF v" + Application.current.meta.get('version') + " - Psych Engine v" + psychEngineVersion;
+
+		abdooVersion_num = getModVersion();
 
 		var abdooVersion:FlxText = new FlxText(12, FlxG.height - 44, 0, "Abdoo Funk v" + abdooVersion_num, 12);
 		abdooVersion.scrollFactor.set();
