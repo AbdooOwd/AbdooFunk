@@ -642,8 +642,8 @@ class TitleState extends MusicBeatState
 
 		if(logoBl != null) {
 			logoBl.animation.play('bump', true);
-			bump(withAbdoo.scale, "x", 1.2, 1, 0.345);
-			bump(withAbdoo.scale, "y", 1.2, 1, 0.345);
+			bump(withAbdoo.scale, "x", 1.2, 1, 0.5);
+			bump(withAbdoo.scale, "y", 1.2, 1, 0.5);
 		}
 
 		if(gfDance != null) {

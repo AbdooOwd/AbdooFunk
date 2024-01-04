@@ -1093,8 +1093,8 @@ class PlayState extends MusicBeatState
 				stageGroup.add(whiteBg);
 			case 'glop': // for 'jump-out'
 				
-				var sky:BGSprite = new BGSprite('externMod/hahaGlop/happy_sky', -640, -700, 0.75, 0.75);
-				var back:BGSprite = new BGSprite('externMod/hahaGlop/happy_back', -640, -600, 0.9, 0.9);
+				var sky:BGSprite = new BGSprite('externMod/hahaGlop/happy_sky', -700, -700, 0.75, 0.75);
+				var back:BGSprite = new BGSprite('externMod/hahaGlop/happy_back', -700, -600, 0.9, 0.9);
 				var front:BGSprite = new BGSprite('externMod/hahaGlop/happy_front', -590, -300, 1, 1);
 
 				var scale:Float = 0.8;
