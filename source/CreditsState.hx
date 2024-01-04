@@ -270,7 +270,7 @@ class CreditsState extends MusicBeatState
 				FlxG.camera.angle -= angleRot;
 				rightBom = true;
 			}
-			new FlxTimer().start(Conductor.calculateCrochet(102)/1000, function(tmr){
+			new FlxTimer().start((Conductor.calculateCrochet(102)/1000), function(tmr){
 				again = true;
 			});
 		}
